@@ -1,10 +1,19 @@
-import { MongoClient } from "mongodb"
+import {connectDB} from "/utils/database.js";
 
-export default function Home() {
-  const client = MongoClient.connect('mongodb+srv://heoboyoung:HBY723@heoboyoung.u77umxd.mongodb.net/?retryWrites=true&w=majority&appName=heoboyoung');
-
+export default async function Home() {
+  // 모듈을 사용해서 MongoDB Client 접속
+  let client = await connectDB;
+  // 접속한 클라이언트에서 사용할 db 선택
+  const db = client.db("forum");
+  // db에서 'post'라는 콜렉션 찾아서 결과 출력
+  let result = await db.collection('post').find().toArray();
+  
   return (
-    <div>테스트</div>
-
-  )
+    <div>
+      {console.log(result)}
+      {result[0].title}
+      <br></br>
+      {result[0].content}
+    </div>
+  );
 }
